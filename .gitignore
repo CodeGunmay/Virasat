@@ -1,0 +1,24 @@
+# Credentials, local user data and runtime state
+.env
+.env.*.local
+*.db
+*.sqlite
+*.sqlite3
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+node_modules/
+build/
+dist/
+coverage/
+
+# Unused Arena session/repair artifacts; retained locally for reference
+.arena-state
+STATUS.md
+minimal_test.py
+backend/minimal_test.py
+backend/fix_security.py
+backend/api/v1/auth_new.py
+backend/core/security_fix.py
+backend/core/security_new.py

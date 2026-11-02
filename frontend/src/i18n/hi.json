@@ -1,0 +1,133 @@
+{
+  "app": {
+    "title": "विरासत",
+    "subtitle": "अहमदाबाद की पुरानी शहर के लिए धरोहर चलने की योजना"
+  },
+  "planning": {
+    "select_at_least_one_site": "कम से कम एक स्थल चुनें।",
+    "select_sites": "स्थल चुनें",
+    "planning_title": "अपनी विरासत यात्रा बनाएं",
+    "planning_subtitle": "अपनी रुचि के अनुसार स्थल चुनें और व्यक्तिगत मार्ग बनाएं।",
+    "generate_route": "मार्ग उत्पन्न करें",
+    "select_instructions": "ऊपर दिए गए स्थल चुनकर एक चलने का मार्ग बनाएं।",
+    "your_route": "आपका मार्ग",
+    "time_estimate": "{minutes} मिनट अनुमानित",
+    "estimated_tag": "(अनुमानित)",
+    "interest_reason": "रुचि मिलान: {code}",
+    "route_will_optimize": "चयनित हितों के आधार पर मार्ग अनुकूलित किया जाएगा।",
+    "change_selection": "चयन बदलें",
+    "preferences": " वरीयताएं",
+    "planning_title_display": "धर्मयात्रा योजना",
+    "planning_subtitle_display": "अहमदाबाद के पुराने शहर के माध्यम से एक व्यक्तिगत चलने का मार्ग डिज़ाइन करें।"
+  },
+  "categories": {
+    "mosque": "मस्जिद",
+    "temple": "मंदिर",
+    "stepwell": "स्टेपवेल",
+    "ashram": "आश्रम",
+    "lake": "झील",
+    "market": "बाज़ार",
+    "monument": "मॉन्यूमेंट"
+  },
+  "interests": {
+    "history": "इतिहास",
+    "architecture": "आर्किटेक्चर",
+    "culinary": "कुलीनरी",
+    "culture": "संस्कृति",
+    "photography": "फोटोग्राफी",
+    "spiritual": "आध्यात्मिक"
+  },
+  "errors": {
+    "load_sites_failed": "स्थल लोड करने में विफल। कृपया पुनः प्रयास करें।",
+    "route_generation_failed": "मार्ग पीढ़ी विफल। कृपया पुनः प्रयास करें।"
+  },
+  "map": {
+    "map_title": "इंटरैक्टिव मानचित्र",
+    "no_plan_generated": "अभी तक कोई मार्ग उत्पन्न नहीं हुआ है",
+    "generate_first": "सबसे पहले एक मार्ग उत्पन्न करें ताकि मानचित्र पर देख सकूं।",
+    "site": "स्थल {index} of {total}",
+    "visit_at": "{time} पर जाएँ",
+    "select_route_first": "सबसे पहले एक मार्ग चुनें",
+    "generate_route_desc": "एक धरोहर चलने का मार्ग उत्पन्न करके इसे अंतरक्रियात्मक मानचित्र पर प्रदर्शित करें।"
+  },
+  "timeline": {
+    "itinerary_title": "आपका यात्राक्रम",
+    "itinerary_subtitle": "अपने नियोजित धर्मयात्रा की समीक्षा करें",
+    "no_itinerary": "अभी तक कोई यात्राक्रम नहीं",
+    "generate_first": "सबसे पहले एक मार्ग उत्पन्न करें ताकि यात्राक्रम देख सकूं।",
+    "planning_mode": "योजना मोड पर जाएं",
+    "stops": "स्टॉप",
+    "total_minutes": "कुल मिनट",
+    "confirm_remove": "क्या आप इस स्टॉट को हटाना सुनिश्चित हैं?",
+    "interest_reason": "रुचि: {code}",
+    "estimated_duration": "{minutes} मिनट अनुमानित",
+    "estimated_tag": "(अनुमानित)",
+    "edit": "संपादित करें",
+    "export": "यात्राक्रम निर्यात करें",
+    "modify": "मार्ग बदलें"
+  },
+  "form": {
+    "title": "अपना अनुभव साझा करें",
+    "share_experience": "अपना अनुभव साझा करें",
+    "placeholder": "हमारी यात्रा के बारे में बताएं...",
+    "submit": "जमा करें",
+    "submitting": "जमा कर रहे हैं...",
+    "submission_successful": "आपका जमा किया गया सफलतापूर्वक पोस्ट किया गया!",
+    "submission_failed": "जमा करने में विफल। कृपया पुनः प्रयास करें।",
+    "images": "छवियाँ",
+    "max_2_images": "अधिकतम 2 छवियाँ अनुमत"
+  },
+  "history": {
+    "section_title": "अहमदाबाद के धरोहर स्थल",
+    "jama_masjid": "जामा मस्जिद",
+    "mughal_period": "मुगल काल",
+    "jama_masjid_sig": "1423 में बनाया गया, अहमदाबाद का शुक्रवार मस्जिद, इंडो-इस्लामिक वास्तुकला का शानदार उदाहरण।",
+    "sidi_sayyid": "सिद्धिSayyid मस्जिद",
+    "sidi_sayyid_sig": " इसके जटिल पत्थर की जाली कार्य (जालियों) के लिए प्रसिद्ध, गुजरात के कलाकारों का एक मास्टरपीस।",
+    "adalaj_stepwell": "अदलाज स्टेपवेल",
+    "sultanate_period": "सल्तनत काल",
+    "adalaj_sig": "1498 में बनाया गया, एक पांच मंजिला स्टेपवेल हिंदू, इस्लामी और भारतीय वास्तुकला शैलियों का संगम।",
+    "sabarmati_ashram": "साबरमती आश्रम",
+    "independence": "स्वतंत्रता युग",
+    "ashram_sig": "स्वतंत्रता के दौरान महात्मा गांधी का मुख्यालय, सरमती नदी के किनारे स्थित।",
+    "kankaria_lake": "कंकरीया झील",
+    "colonial_period": "औपनिवेशिक काल",
+    "kankaria_sig": "अहमदाबाद की सबसे बड़ी मनोरंजन झील, 1451 में बनाया गया, नौकायन और zoological garden सुविधाएं प्रदान करता है।"
+  },
+  "community": {
+    "title": "समुदाय योगदान",
+    "no_posts_yet": "सबसे पहले अपना अनुभव साझा करें!",
+    "confirm_delete": "क्या आप निश्चित रूप से यह पोस्ट हटाना चाहते हैं?"
+  },
+  "roles": {
+    "visitor": "दर्शक",
+    "moderator": "मॉडरेटर"
+  },
+  "general": {
+    "unknown": "ज्ञात नहीं"
+  },
+  "form": {
+    "enter_content": "कुछ टेक्स्ट दर्ज करें।"
+  },
+  "login": {
+    "invalid_credentials": "ईमेल या पासवर्ड गलत।",
+    "welcome_back": "वापसी का स्वागत है!",
+    "no_account": "खाता नहीं है?",
+    "register": "पंजीकरण करें"
+  },
+  "register": {
+    "welcome": "अपना खाता बनाएं",
+    "registration_failed": "पंजीकरण में विफल। कृपया पुनः प्रयास करें।",
+    "name": "नाम",
+    "name_placeholder": "अपना नाम दर्ज करें",
+    "email": "ईमेल",
+    "email_placeholder": " अपना ईमेल दर्ज करें",
+    "password": "पासवर्ड",
+    "password_placeholder": " अपना पासवर्ड दर्ज करें",
+    "role": "भूमिका"
+  },
+  "errors": {
+    "load_posts_failed": "समुदाय के पोस्ट लोड करने में विफल।",
+    "removal_failed": "आइटम हटाने में विफल।"
+  }
+}
