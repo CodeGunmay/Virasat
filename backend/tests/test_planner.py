@@ -159,3 +159,33 @@ def test_moderation_approval_creates_sourced_site(client):
     assert detail.json()['sources'][0]['url']=='https://example.org/reviewed-source'
     assert client.post(f'/moderation/{submission_id}/decision',headers=headers,
         json={'decision':'approve','moderator_note':'Duplicate decision'}).status_code==409
+
+
+def test_csv_schedule_import_excludes_closed_site(client, tmp_path):
+    from db.seed_heritage import load_schedules
+    csv_file = tmp_path / 'hours.csv'
+    csv_file.write_text(
+        'site_name,weekday,open_time,close_time,source_url\n'
+        'Site A,0,07:00,08:00,https://example.org/opening-hours\n',
+        encoding='utf-8'
+    )
+    with next(app.dependency_overrides[get_db]()) as db:
+        assert load_schedules(db, csv_file) == 1
+        db.commit()
+        assert load_schedules(db, csv_file) == 0
+        assert db.query(SiteSchedule).filter(SiteSchedule.site_id == 1).count() == 1
+        db.commit()
+
+    response = client.post('/plans', json=payload())
+    assert response.status_code == 200
+    assert 1 not in [stop['site_id'] for stop in response.json()['stops']]
+    assert client.get('/sites/1').json()['schedules'][0]['weekday'] == 'monday'
+
+    csv_file.write_text(
+        'site_name,weekday,open_time,close_time,source_url\n'
+        'Missing Site,0,07:00,08:00,https://example.org/opening-hours\n',
+        encoding='utf-8'
+    )
+    with next(app.dependency_overrides[get_db]()) as db:
+        with pytest.raises(ValueError, match='unknown site name'):
+            load_schedules(db, csv_file)

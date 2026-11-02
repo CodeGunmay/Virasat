@@ -4,9 +4,60 @@ Coordinates are sourced from a Wikimedia monument coordinate list, not field
 verified. Visiting durations are planning estimates; opening hours are UNKNOWN.
 No invented access windows or claims of confirmed public entry are added.
 """
-from datetime import datetime, timezone
+import csv
+from datetime import datetime
+from pathlib import Path
+from urllib.parse import urlparse
 from db.base import engine, SessionLocal
-from db.models import Base, City, Site, SiteSource
+from db.models import Base, City, Site, SiteSource, SiteSchedule
+
+SCHEDULE_FILE = Path(__file__).resolve().parents[1] / 'data' / 'schedules.csv'
+WEEKDAYS = ('monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday')
+HEADERS = ('site_name', 'weekday', 'open_time', 'close_time', 'source_url')
+
+
+def load_schedules(db, csv_path=SCHEDULE_FILE):
+    db.flush()
+    sites = {s.name.casefold(): s for s in db.query(Site).all()}
+    rows = []
+    with open(csv_path, newline='', encoding='utf-8-sig') as file:
+        reader = csv.DictReader(file)
+        if reader.fieldnames != list(HEADERS):
+            raise ValueError(f'Schedule CSV must have columns: {", ".join(HEADERS)}')
+        for line, row in enumerate(reader, start=2):
+            name = (row['site_name'] or '').strip()
+            site = sites.get(name.casefold())
+            if site is None:
+                raise ValueError(f'Schedule CSV line {line}: unknown site name {name!r}')
+            try:
+                day = int((row['weekday'] or '').strip())
+                if day not in range(7):
+                    raise ValueError()
+                opening = datetime.strptime((row['open_time'] or '').strip(), '%H:%M').strftime('%H:%M')
+                closing = datetime.strptime((row['close_time'] or '').strip(), '%H:%M').strftime('%H:%M')
+                if opening >= closing:
+                    raise ValueError()
+            except ValueError:
+                raise ValueError(f'Schedule CSV line {line}: invalid weekday or time range') from None
+            url = (row['source_url'] or '').strip()
+            if urlparse(url).scheme not in ('http', 'https') or not urlparse(url).netloc:
+                raise ValueError(f'Schedule CSV line {line}: invalid source_url')
+            rows.append((site, WEEKDAYS[day], opening, closing, url))
+
+    existing = {(s.site_id, s.weekday.lower(), s.open, s.close)
+                for s in db.query(SiteSchedule).all()}
+    sources = {(s.site_id, s.url) for s in db.query(SiteSource).all()}
+    added = 0
+    for site, day, opening, closing, url in rows:
+        key = (site.id, day, opening, closing)
+        if key not in existing:
+            db.add(SiteSchedule(site_id=site.id, weekday=day, open=opening, close=closing))
+            existing.add(key)
+            added += 1
+        if (site.id, url) not in sources:
+            db.add(SiteSource(site_id=site.id, url=url, title='Opening-hours source'))
+            sources.add((site.id, url))
+    return added
 
 COORD_SOURCE = 'https://en.wikipedia.org/wiki/List_of_Monuments_of_National_Importance_in_Ahmedabad_district'
 HERITAGE_SOURCE = 'https://whc.unesco.org/en/list/1551'
@@ -52,7 +103,7 @@ RECORDS = [
     ('Swaminarayan Temple Kalupur',23.030000,72.591000,'temples_jain',30,'Historic Swaminarayan temple complex in Kalupur; respect worship and visitor rules.'),
 ]
 
-def seed():
+def seed(csv_path=SCHEDULE_FILE):
     Base.metadata.create_all(bind=engine)
     inserted=0
     with SessionLocal() as db:
@@ -76,7 +127,9 @@ def seed():
                 SiteSource(site_id=site.id,url=history_source,title='Heritage context')
             ])
             inserted+=1
+        added_hours = load_schedules(db, csv_path)
         db.commit()
+    print(f'New schedule slots seeded: {added_hours}')
     return inserted
 
 if __name__=='__main__':
