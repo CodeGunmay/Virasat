@@ -16,7 +16,7 @@ const labels: Record<string, string> = {
   already_visited: 'Already visited',
   lower_match: 'Lower match with your interests'
 };
-const format = (date: Date) => date.toLocaleTimeString('en-IN', {hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'Asia/Kolkata'});
+const format = (date: Date) => date.toLocaleTimeString('en-IN', {hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'Asia/Kolkata'}).replace(/\b(am|pm)\b/i, value => value.toUpperCase());
 const getName = (id: number, sites: Site[]) => sites.find(s => s.id === id)?.name || 'Heritage stop ' + id;
 const nameList = (ids: number[], sites: Site[]) => ids.map(id => getName(id, sites)).join(', ') || 'None';
 
@@ -28,15 +28,17 @@ export default function ItineraryTimeline({plan, sites, onPlan}: Props) {
   const [busy, setBusy] = useState(false);
   const [positionSite, setPositionSite] = useState<number | null>(null);
   const [gps, setGps] = useState<{lat: number; lng: number} | null>(null);
-  const [change, setChange] = useState<{before: number; after: number; added: number[]; removed: number[]; reordered: number[]} | null>(null);
+  const [change, setChange] = useState<{before: number; after: number; beforeMinutes: number; afterMinutes: number; beforeWalk: number; afterWalk: number; oldIds: number[]; newIds: number[]; added: number[]; removed: number[]; reordered: number[]} | null>(null);
 
   useEffect(() => { setVisited([]); setSkipped([]); }, [plan]);
 
   const finish = new Date(plan.finish_time);
   const start = new Date(finish.getTime() - plan.total_duration_minutes * 60000);
+  const used = plan.stops.reduce((sum, stop) => sum + stop.walking_minutes + stop.visit_minutes, 0);
+  const rest = plan.stops.length > 1 ? Math.max(0, plan.total_duration_minutes - used) / (plan.stops.length - 1) : 0;
   let elapsed = 0;
   const rows = plan.stops.map((stop, i) => {
-    elapsed += stop.walking_minutes + (i ? 0 : 0);
+    elapsed += stop.walking_minutes + (i ? rest : 0);
     const arrive = new Date(start.getTime() + elapsed * 60000);
     elapsed += stop.visit_minutes;
     const leave = new Date(start.getTime() + elapsed * 60000);
@@ -74,6 +76,9 @@ export default function ItineraryTimeline({plan, sites, onPlan}: Props) {
       const nextIds = data.stops.map(s => s.site_id);
       setChange({
         before: oldIds.length, after: nextIds.length,
+        beforeMinutes: plan.total_duration_minutes, afterMinutes: data.total_duration_minutes,
+        beforeWalk: plan.walking_minutes, afterWalk: data.walking_minutes,
+        oldIds, newIds: nextIds,
         added: data.diff?.added ?? nextIds.filter(id => !oldIds.includes(id)),
         removed: data.diff?.removed ?? oldIds.filter(id => !nextIds.includes(id) && !visited.includes(id)),
         reordered: data.diff?.reordered ?? []
@@ -108,7 +113,7 @@ export default function ItineraryTimeline({plan, sites, onPlan}: Props) {
 
     <details className="why-panel" open><summary><span>✧ Why these stops?</span><span className="details-hint">How we shaped your route</span></summary>
       <div className="why-content"><p>We balance your interests, travel time and available visiting hours. Places that don't fit are listed below.</p>
-        {excluded.length ? <ul className="excluded-list">{excluded.slice(0, 12).map((item, i) => {
+        {excluded.length ? <ul className="excluded-list">{excluded.map((item, i) => {
           const id = Number(item.site_id);
           const code = String(item.reason || '');
           return <li key={id + '-' + i}><strong>{getName(id, sites)}</strong><span>{labels[code] || (allowedReasons.includes(code) ? 'Does not fit this walk' : 'Lower match with your interests')}</span></li>;
@@ -128,7 +133,7 @@ export default function ItineraryTimeline({plan, sites, onPlan}: Props) {
       <label className="form-label replan-time">Time remaining: <strong>{minutes} minutes</strong><input type="range" min="30" max="360" step="15" value={minutes} onChange={e => setMinutes(Number(e.target.value))}/></label>
       <button className="btn btn-primary" type="button" disabled={busy} onClick={replan}>{busy ? <><span className="spinner"></span> Re-planning…</> : 'Re-plan my walk ↗'}</button>
       {error && <div className="notice error-notice" role="alert">{error} <button className="btn btn-outline" onClick={replan} disabled={busy}>Try again</button></div>}
-      {change && <div className="change-card" role="status"><h3>Here's what changed</h3><div className="change-counts"><div><span>BEFORE</span><strong>{change.before} stops</strong></div><span aria-hidden="true">→</span><div><span>AFTER</span><strong>{change.after} stops</strong></div></div><p><strong>Added:</strong> {nameList(change.added, sites)}</p><p><strong>Removed:</strong> {nameList(change.removed, sites)}</p><p><strong>Reordered:</strong> {nameList(change.reordered, sites)}</p></div>}
+      {change && <div className="change-card" role="status"><h3>Here's what changed</h3><div className="change-counts"><div><span>BEFORE</span><strong>{change.before} stops · {Math.round(change.beforeMinutes)} min</strong><span>{Math.round(change.beforeWalk)} min walking</span></div><span aria-hidden="true">→</span><div><span>AFTER</span><strong>{change.after} stops · {Math.round(change.afterMinutes)} min</strong><span>{Math.round(change.afterWalk)} min walking</span></div></div><div className="change-routes"><div><h4>Previous itinerary</h4><ol>{change.oldIds.map(id => <li key={id}>{getName(id, sites)}</li>)}</ol></div><div><h4>Updated itinerary</h4><ol>{change.newIds.map(id => <li key={id}>{getName(id, sites)}</li>)}</ol></div></div><p><strong>Added:</strong> {nameList(change.added, sites)}</p><p><strong>Removed:</strong> {nameList(change.removed, sites)}</p><p><strong>Reordered:</strong> {nameList(change.reordered, sites)}</p></div>}
     </section>
   </section>;
 }

@@ -27,6 +27,7 @@ export default function PlanningForm({ onPlan, onSites }: Props) {
   const [legCap, setLegCap] = useState(45);
   const [rest, setRest] = useState(0);
   const [error, setError] = useState('');
+  const [retry, setRetry] = useState<'sites' | 'plan'>('sites');
   const [loading, setLoading] = useState(false);
   const [sitesLoading, setSitesLoading] = useState(true);
   const [locating, setLocating] = useState(false);
@@ -40,6 +41,7 @@ export default function PlanningForm({ onPlan, onSites }: Props) {
       onSites(data.items);
       setStartId(old => old ?? data.items[0]?.id ?? null);
     } catch {
+      setRetry('sites');
       setError('We could not load the starting points. Check your connection and try again.');
     } finally {
       setSitesLoading(false);
@@ -62,8 +64,8 @@ export default function PlanningForm({ onPlan, onSites }: Props) {
     );
   }
 
-  async function generateRoute(event: React.FormEvent) {
-    event.preventDefault();
+  async function generateRoute(event?: React.FormEvent) {
+    event?.preventDefault();
     const start = sites.find(s => s.id === startId);
     if (!gps && !start) { setError('Choose a starting landmark or use your location.'); return; }
     setLoading(true);
@@ -84,6 +86,7 @@ export default function PlanningForm({ onPlan, onSites }: Props) {
       onPlan(data);
       navigate('/itinerary');
     } catch (err) {
+      setRetry('plan');
       setError(axios.isAxiosError(err) && typeof err.response?.data?.detail === 'string'
         ? err.response.data.detail
         : 'We could not create your walk this time. Please retry or adjust your choices.');
@@ -120,8 +123,9 @@ export default function PlanningForm({ onPlan, onSites }: Props) {
           <label className="form-label">Hidden gems preference: {Math.round(hidden * 100)}% <input type="range" min="0" max="1" step="0.1" value={hidden} onChange={e => setHidden(Number(e.target.value))} /></label>
         </div>
       </details>
-      {error && <div className="notice error-notice" role="alert"><p>{error}</p><button className="btn btn-outline" type="button" onClick={load}>Retry loading sites</button></div>}
+      {error && <div className="notice error-notice" role="alert"><p>{error}</p><button className="btn btn-outline" type="button" onClick={retry === 'sites' ? load : () => generateRoute()}>{retry === 'sites' ? 'Retry loading sites' : 'Try planning again'}</button></div>}
       <button type="submit" className="btn btn-primary planner-submit" disabled={loading || sitesLoading || (!gps && !sites.length)}>{loading ? <><span className="spinner" aria-hidden="true"></span> Finding your best walk…</> : 'Create my heritage walk ↗'}</button>
+      {loading && <div className="planner-loading" role="status" aria-label="Building your itinerary"><div className="skeleton skeleton-line"></div><div className="skeleton skeleton-line short"></div><div className="skeleton skeleton-input"></div></div>}
       <p className="form-disclaimer">Walking times are estimates. Check unverified opening hours locally.</p>
     </form>
   </div>;
