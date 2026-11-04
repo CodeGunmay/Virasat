@@ -2,7 +2,7 @@ name: Verify frontend and backend
 
 on:
   push:
-    branches: [ui-redesign]
+    branches: [main, ui-redesign]
   pull_request:
     branches: [main]
 
