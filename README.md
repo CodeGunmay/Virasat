@@ -54,7 +54,7 @@ The frontend runs at `http://localhost:3000` and calls `http://localhost:8000` b
 
 For step-by-step Netlify, Render and PostgreSQL configuration, see [DEPLOYMENT.md](DEPLOYMENT.md).
 
-The starter catalog now includes **29 source-labelled historic-core candidates**. Run `python -m db.seed_heritage` to create the demo database or initialize PostgreSQL; local SQLite files are deliberately excluded from published source archives because older Arena exports may contain user records. Coordinates from Wikimedia/Wikidata references carry low confidence pending field review. Schedules remain unverified and no fake hours are inserted.
+The starter catalog now includes **29 source-labelled historic-core candidates**. Run `python -m db.seed_heritage` to create the demo database or initialize PostgreSQL; local SQLite files are deliberately excluded from published source archives because older Arena exports may contain user records. Coordinates from Wikimedia/Wikidata references carry low confidence pending field review. The team-supplied schedules.csv now provides 42 weekday windows for six sites with AMC source URLs; these times still require independent access checks before real-world reliance.
 
 ## API highlights
 

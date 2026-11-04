@@ -1,13 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --background: #f4e8d2;
-    --foreground: #2a3a5c;
-    --muted: #6b7280;
-    --accent: #b84f55;
-    --gold: #d4af3c;
-  }
+:root {
+  --ivory: #f5f0e2;
+  --indigo: #2a3a5c;
+  --maroon: #b84f55;
+  --gold: #d4af3c;
+  --muted: #657087;
+  --line: #e5decd;
+  --paper: #fffdf8;
 }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--ivory); color: var(--indigo); font-family: 'Inter', Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+h1,h2,h3,h4 { font-family: 'Playfair Display', Georgia, serif; letter-spacing: -.025em; }
+button,input,select { font: inherit; }
+button,a,select,input { -webkit-tap-highlight-color: transparent; }
+button { cursor: pointer; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+::selection { background: #ead7a0; color: var(--indigo); }

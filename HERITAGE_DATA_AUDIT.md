@@ -2,7 +2,7 @@
 
 Virasat's bundled database is **sample data**, not a verified production gazetteer. Do not call its location coordinates, site hours, or historical summaries verified until each record has been checked and reviewed.
 
-The current idempotent seeder (`backend/db/seed_heritage.py`) contains 29 heritage candidates. Twenty-six use a Wikimedia coordinate list of protected Ahmedabad monuments. Three use their own public map references (Wikimedia Commons, Wikipedia and Wikidata) with corresponding AMC heritage pages where available. Every imported site is marked low confidence; all visit durations are estimates; no operating-hours rows are created. The previous Arena SQLite database is not a source of verified facts and is excluded from shareable ZIP releases.
+The current idempotent seeder (`backend/db/seed_heritage.py`) contains 29 heritage candidates. Twenty-six use a Wikimedia coordinate list of protected Ahmedabad monuments. Three use their own public map references (Wikimedia Commons, Wikipedia and Wikidata) with corresponding AMC heritage pages where available. Every imported site is marked low confidence; all visit durations are estimates. A separate team-supplied CSV now adds 42 weekly opening windows for six sites, with public source URLs; the claims still require an independent currency and visitor-access review. The previous Arena SQLite database is not a source of verified facts and is excluded from shareable ZIP releases.
 
 ## Reliable starting references (accessed 2 November 2026)
 
